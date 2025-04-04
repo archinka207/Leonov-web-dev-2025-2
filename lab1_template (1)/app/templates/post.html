@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Заголовок поста -->
+        <h1 class="mt-4">{{ post.title }}</h1>
+        
+        <!-- Автор и дата публикации -->
+        <p class="lead">
+            Опубликовал <a href="#">{{ post.author }}</a>
+            <small class="text-muted">{{ post.date.strftime('%d.%m.%Y %H:%M') }}</small>
+        </p>
+        <hr>
+        
+        <!-- Изображение поста -->
+        <img class="img-fluid rounded" src="{{ url_for('static', filename='images/' + post.image_id) }}" alt="Post image">
+        <hr>
+        
+        <!-- Текст поста -->
+        <p class="lead">{{ post.text }}</p>
+        <hr>
+        
+        <!-- Форма комментария -->
+        <div class="card my-4">
+            <h5 class="card-header">Оставьте комментарий:</h5>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" placeholder="Ваш комментарий"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Отправить</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Комментарии -->
+        <div class="mb-4">
+            <h4>Комментарии:</h4>
+            {% for comment in post.comments %}
+                <!-- Основной комментарий -->
+                <div class="media mb-4">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ comment.author }}</h5>
+                        <p>{{ comment.text }}</p>
+                        
+                        <!-- Ответы на комментарий -->
+                        {% if comment.replies %}
+                            {% for reply in comment.replies %}
+                                <div class="media mt-3">
+                                    <div class="media-body">
+                                        <h5 class="mt-0">{{ reply.author }}</h5>
+                                        <p>{{ reply.text }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
