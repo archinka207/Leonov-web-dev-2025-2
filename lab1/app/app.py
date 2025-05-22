@@ -47,9 +47,9 @@ def posts():
 
 @app.route('/posts/<int:index>')
 def post(index):
-    posts = posts_list()  # Получаем список постов
-    if index < 0 or index >= len(posts):  # Проверяем валидность индекса
-        abort(404)  # Возвращаем 404 для несуществующих постов
+    posts = posts_list()  
+    if index < 0 or index >= len(posts):  
+        abort(404)  
     post = posts[index]
     return render_template('post.html', post=post)
 @app.route('/about')

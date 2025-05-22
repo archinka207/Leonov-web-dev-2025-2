@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Заголовки запроса</h1>
+
+{% if request_headers %}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Заголовок</th>
+                <th>Значение</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for header, value in request_headers %}
+            <tr>
+                <td><code>{{ header }}</code></td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-warning" role="alert">
+    Заголовки запроса не найдены.
+</div>
+{% endif %}
+{% endblock %}

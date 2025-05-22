@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Валидация номера телефона</h1>
+
+<form method="POST" action="{{ url_for('phone') }}" class="mb-4 p-4 border rounded shadow-sm">
+    <div class="mb-3">
+        <label for="phoneInput" class="form-label">Номер телефона:</label>
+        <input type="text" class="form-control {% if is_invalid %}is-invalid{% endif %}" id="phoneInput" name="phone_number" value="{{ phone_number }}" placeholder="+7 (999) 123-45-67">
+        {% if is_invalid %}
+        <div class="invalid-feedback">
+            {{ error_message }}
+        </div>
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Проверить</button>
+</form>
+
+{% if formatted_phone %}
+<div class="alert alert-success mt-4" role="alert">
+    <h4 class="alert-heading">Номер телефона действителен!</h4>
+    <p>Отформатированный номер: <strong>{{ formatted_phone }}</strong></p>
+</div>
+{% elif request.method == 'POST' and not is_invalid %}
+<div class="alert alert-info mt-4" role="alert">
+    Пожалуйста, введите номер телефона для проверки.
+</div>
+{% endif %}
+
+<h2 class="mt-5 mb-3">Примеры допустимых форматов:</h2>
+<ul class="list-group">
+    <li class="list-group-item"><code>+7 (123) 456-75-90</code></li>
+    <li class="list-group-item"><code>8(123)4567590</code></li>
+    <li class="list-group-item"><code>123.456.75.90</code></li>
+    <li class="list-group-item"><code>9123456789</code></li>
+    <li class="list-group-item"><code>8 912 345 67 89</code></li>
+</ul>
+{% endblock %}

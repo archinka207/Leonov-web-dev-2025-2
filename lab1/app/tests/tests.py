@@ -57,7 +57,6 @@ def test_about_uses_correct_template(client, captured_templates):
     template, context = captured_templates[0]
     assert template == 'about.html'
 
-# Тесты для проверки передаваемых данных
 def test_posts_template_gets_posts_data(client, captured_templates):
     client.get('/posts')
     template, context = captured_templates[0]
@@ -78,62 +77,45 @@ def test_post_template_gets_post_data(client, captured_templates):
     assert 'image_id' in post
     assert 'comments' in post
 
-# Тесты для проверки отображения данных поста
 def test_post_page_contains_all_data(client):
-    # 1. Клиент УЖЕ создаёт контекст при get()
-    response = client.get('/posts/0')  # Контекст создаётся автоматически
+    response = client.get('/posts/0') 
     assert response.status_code == 200
     
-    # 2. Декодируем HTML-ответ
-    post_data = response.data.decode('utf-8')
+    post_data = response.data.decode('utf-8')    
+
+    post = posts_list()[0] 
+
+    assert post['title'] in post_data 
+    assert post['author'] in post_data 
+    assert post['text'] in post_data  
     
-    # 3. Импортируем функцию НАПРЯМУЮ (без обращения к flask_app)
-    
-    
-    # 4. Берём тестовые данные
-    post = posts_list()[0]  # Первый пост
-    
-    # 5. Проверяем соответствие данных
-    assert post['title'] in post_data  # Заголовок есть в HTML
-    assert post['author'] in post_data  # Автор отображается
-    assert post['text'] in post_data  # Основной текст
-    
-    # 6. Проверяем изображение (ID без .jpg)
     assert post['image_id'].split('.')[0] in post_data
     
-    # 7. Проверяем комментарии
     for comment in post['comments']:
-        assert comment['author'] in post_data  # Автор комментария
-        assert comment['text'] in post_data  # Текст комментария
-        for reply in comment.get('replies', []):  # Безопасная проверка replies
+        assert comment['author'] in post_data 
+        assert comment['text'] in post_data 
+        for reply in comment.get('replies', []): 
             assert reply['author'] in post_data
             assert reply['text'] in post_data
 
 # Тесты для проверки формата даты
 def test_post_date_format_in_list(client):
-    # 1. Получаем список постов
     response = client.get('/posts')
     assert response.status_code == 200
     html_content = response.data.decode('utf-8')
     
-    # 2. Берем дату первого поста из posts_list()
     post = posts_list()[0]
     expected_date = post['date'].strftime('%d.%m.%Y')
-    
-    # 3. Проверяем наличие даты в правильном формате
     assert expected_date in html_content
 
 def test_post_date_format_in_single_page(client):
-    # 1. Получаем страницу поста
     response = client.get('/posts/0')
     assert response.status_code == 200
     html_content = response.data.decode('utf-8')
-    
-    # 2. Берем дату первого поста из posts_list()
+  
     post = posts_list()[0]
     expected_date = post['date'].strftime('%d.%m.%Y %H:%M')
     
-    # 3. Проверяем наличие даты в правильном формате
     assert expected_date in html_content
 
 # Тесты для обработки ошибок
@@ -160,7 +142,7 @@ def test_comment_form_exists(client):
 
 def test_posts_list_contains_all_posts(client):
     """Проверяем отображение всех постов в списке"""
-    from app import posts_list  # Импортируем напрямую
+    from app import posts_list 
     response = client.get('/posts')
     html = response.data.decode('utf-8')
     for post in posts_list():

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Управление куки</h1>
+<div class="alert alert-info" role="alert">
+    {% if cookie_status == 'установлено' %}
+    Куки 'my_cookie' было успешно установлено.
+    {% elif cookie_status == 'удалено' %}
+    Куки 'my_cookie' было успешно удалено.
+    {% else %}
+    Куки 'my_cookie' не установлено. Нажмите, чтобы установить.
+    {% endif %}
+</div>
+
+<p>
+    Текущее значение куки 'my_cookie':
+    {% if request.cookies.my_cookie %}
+    <span class="badge bg-success">{{ request.cookies.my_cookie }}</span>
+    {% else %}
+    <span class="badge bg-danger">Не установлено</span>
+    {% endif %}
+</p>
+
+<p>
+    При каждом обновлении этой страницы куки будет либо устанавливаться, либо удаляться.
+</p>
+{% endblock %}

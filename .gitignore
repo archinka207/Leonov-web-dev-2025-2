@@ -1,35 +1,38 @@
-# Исключить папку venv полностью
-veokr/
+# Исключаем виртуальное окружение
+ve/
 
-# Дополнительные стандартные исключения для Python (рекомендуется)
+# Исключаем другие возможные названия виртуальных окружений
+veokr/
+env/
+
+# Исключаем кэш Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
-# Исключить файлы настроек IDE
-.idea/
+# Исключаем файлы настроек IDE
 .vscode/
+.idea/
+
+# Исключаем логи и временные файлы
+*.log
+*.tmp
 *.swp
 *.swo
 
-# Исключить системные файлы
-.DS_Store
-Thumbs.db
+# Исключаем файлы зависимостей
+*.egg-info/
+/dist/
+/build/
+
+# Исключаем файлы конфигурации и секреты
+.env
+.secrets
+config.py
+
+# Исключаем файлы базы данных (если используются)
+*.db
+*.sqlite3
+
+# Исключаем Jupyter Notebook checkpoint
+.ipynb_checkpoints/
