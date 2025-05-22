@@ -8,9 +8,7 @@ from root_app.app import app as root_app
 
 app = DispatcherMiddleware(root_app, {
     '/lab1': lab1_app,
-    '/lab2': lab2_app,
-    '/lab3': lab3_app,
-    '/lab4': lab4_app,
+    '/lab2': lab2_app
 })
 
 application = app
