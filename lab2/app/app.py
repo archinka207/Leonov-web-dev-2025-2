@@ -6,38 +6,22 @@ app = Flask(__name__)
 # Маршрут для главной страницы, перенаправляет на заголовки
 @app.route('/')
 def index():
-    """
-    Перенаправляет пользователя на страницу с заголовками.
-    """
     return redirect(url_for('headers'))
 
 @app.route('/url')
 def url():
-    """
-    Отображает параметры URL-запроса.
-    Параметры извлекаются из request.args.
-    """
     # request.args - это ImmutableMultiDict, содержащий параметры запроса
     url_params = request.args.items()
     return render_template('url.html', title='Параметры URL', url_params=url_params)
 
 @app.route('/headers')
 def headers():
-    """
-    Отображает заголовки HTTP-запроса.
-    Заголовки извлекаются из request.headers.
-    """
     # request.headers - это Headers (наследник dict), содержащий заголовки запроса
     request_headers = request.headers.items()
     return render_template('headers.html', title='Заголовки запроса', request_headers=request_headers)
 
 @app.route('/cookies')
 def cookies():
-    """
-    Устанавливает или удаляет куки 'my_cookie'.
-    Если куки 'my_cookie' не установлено, оно устанавливается.
-    Если куки 'my_cookie' установлено, оно удаляется.
-    """
     cookie_name = 'my_cookie'
     cookie_value = 'flask_value'
     
@@ -58,10 +42,6 @@ def cookies():
 
 @app.route('/form', methods=['GET', 'POST'])
 def form():
-    """
-    Обрабатывает GET и POST запросы для отображения параметров формы.
-    При POST запросе отображает данные, отправленные через форму.
-    """
     form_data = None
     if request.method == 'POST':
         # request.form - это ImmutableMultiDict, содержащий данные формы
@@ -70,10 +50,6 @@ def form():
 
 @app.route('/phone', methods=['GET', 'POST'])
 def phone():
-    """
-    Обрабатывает форму валидации номера телефона.
-    Проверяет номер на соответствие формату и форматирует его.
-    """
     phone_number = ""
     formatted_phone = ""
     error_message = ""

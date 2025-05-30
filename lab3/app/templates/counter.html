@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Счётчик посещений</h1>
+<div class="alert alert-info" role="alert">
+    Вы посетили эту страницу <strong>{{ visits }}</strong> раз(а).
+</div>
+<p>Этот счетчик индивидуален для каждого пользователя и сохраняется в его сессии.</p>
+{% endblock %}

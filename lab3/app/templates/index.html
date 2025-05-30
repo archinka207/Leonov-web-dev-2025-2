@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Добро пожаловать!</h1>
+<p>Это главная страница вашего Flask-приложения с аутентификацией и счетчиком посещений.</p>
+<p>
+    {% if current_user.is_authenticated %}
+    Вы вошли как <strong>{{ current_user.username }}</strong>.
+    {% else %}
+    Вы не вошли в систему. Пожалуйста, <a href="{{ url_for('login') }}">войдите</a>.
+    {% endif %}
+</p>
+{% endblock %}
