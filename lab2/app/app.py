@@ -58,45 +58,35 @@ def phone():
     if request.method == 'POST':
         phone_number = request.form.get('phone_number', '').strip()
         
-        # Шаг 1: Удаляем разрешенные дополнительные символы
-        # Разрешенные символы: пробелы, круглые скобки, дефисы, точки, +
         cleaned_number = re.sub(r'[()\s\-\.]', '', phone_number)
 
-        # Шаг 2: Проверяем на недопустимые символы (остались ли что-то кроме цифр и '+')
         if not re.fullmatch(r'\+?\d+', cleaned_number):
             error_message = "Недопустимый ввод. В номере телефона встречаются недопустимые символы."
             is_invalid = True
         else:
-            # Шаг 3: Проверяем длину и префиксы
-            digits_only = re.sub(r'\D', '', phone_number) # Получаем только цифры для проверки длины
+            digits_only = re.sub(r'\D', '', phone_number) 
 
-            # Если номер начинается с '+7' или '8', он должен содержать 11 цифр
             if phone_number.startswith('+7') or phone_number.startswith('8'):
                 if len(digits_only) != 11:
                     error_message = "Недопустимый ввод. Неверное количество цифр." \
                                     " (Номер должен содержать 11 цифр, если начинается с '+7' или '8')"
                     is_invalid = True
-            # В остальных случаях (без префикса или с другим префиксом), 10 цифр
             else:
                 if len(digits_only) != 10:
                     error_message = "Недопустимый ввод. Неверное количество цифр." \
                                     " (Номер должен содержать 10 цифр)"
                     is_invalid = True
             
-            # Если ошибок нет, форматируем номер
             if not is_invalid:
-                # Приводим к 11-значному формату для форматирования
                 if len(digits_only) == 10:
-                    # Если 10 цифр, считаем, что это российский номер без 8/7
                     digits_only = '8' + digits_only
                 elif phone_number.startswith('+7'):
-                    digits_only = '8' + digits_only[1:] # Заменяем +7 на 8
+                    digits_only = '8' + digits_only[1:] 
                 
                 # Форматирование в 8-***-***-**-**
                 if len(digits_only) == 11:
                     formatted_phone = f"8-{digits_only[1:4]}-{digits_only[4:7]}-{digits_only[7:9]}-{digits_only[9:11]}"
                 else:
-                    # Это запасной случай, если вдруг пропустили ошибку длины
                     error_message = "Недопустимый ввод. Неверное количество цифр."
                     is_invalid = True
 
