@@ -1,0 +1,34 @@
+<!-- app/templates/auth/register.html -->
+
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header text-center">
+                <h3>Регистрация</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('routes.register') }}">
+                    {{ form.hidden_tag() }}
+                    {{ render_field(form.login) }}
+                    {{ render_field(form.last_name) }}
+                    {{ render_field(form.first_name) }}
+                    {{ render_field(form.middle_name) }}
+                    {{ render_field(form.password, type='password') }}
+                    {{ render_field(form.password2, type='password') }}
+                    
+                    {{ form.submit(class="btn btn-primary w-100 mt-3") }}
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small class="text-muted">
+                    Уже есть аккаунт? <a href="{{ url_for('routes.login') }}">Войти</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!-- app/templates/animal_form.html (полностью исправленный) -->
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    
+    <div class="row">
+        <div class="col-md-6">
+            {{ render_field(form.name) }}
+            {{ render_field(form.breed) }}
+            {{ render_field(form.age_in_months, type='number') }}
+        </div>
+        <div class="col-md-6">
+            {{ render_field(form.gender) }}
+            {{ render_field(form.status) }}
+            {% if not is_edit %}
+                <!-- ИЗМЕНЕНИЕ ЗДЕСЬ: Убираем multiple=true, макрос справится сам -->
+                {{ render_field(form.images) }}
+            {% else %}
+                <div class="mb-3">
+                    <label class="form-label">Фотографии</label>
+                    <p class="form-text">Фотографии можно добавить только при создании животного.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Поле описания с Markdown редактором #}
+    {{ render_field(form.description, rows=10, id='markdown-editor') }}
+
+    {{ form.submit(class="btn btn-primary mt-3") }}
+    <a href="{{ request.referrer or url_for('routes.index') }}" class="btn btn-secondary mt-3">Отмена</a>
+</form>
+
+<script>
+    // Инициализация редактора EasyMDE
+    var easyMDE = new EasyMDE({element: document.getElementById('markdown-editor')});
+</script>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- app/templates/_macros.html (полностью исправленный) -->
+
+{% macro render_field(field, type='', rows='', id='') %}
+<div class="mb-3">
+    {{ field.label(class="form-label") }}
+    
+    {% set class_string = "form-control" %}
+    {% if field.errors %}
+        {% set class_string = class_string + " is-invalid" %}
+    {% endif %}
+
+    {# --- ОСНОВНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ --- #}
+    {# Проверяем тип поля. Если это поле для загрузки файлов, рендерим его особо. #}
+    {% if field.type == 'MultipleFileField' %}
+        {# Для MultipleFileField мы не передаем type, он уже 'file' по умолчанию #}
+        {{ field(class=class_string, id=id, multiple=true) }}
+    {% else %}
+        {# Для всех остальных полей используем старую логику #}
+        {{ field(class=class_string, type=type, rows=rows, id=id) }}
+    {% endif %}
+    {# --------------------------------- #}
+
+    {% if field.errors %}
+        <div class="invalid-feedback">
+            {% for error in field.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endmacro %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Наши питомцы</h1>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for animal in animals.items %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <a href="{{ url_for('routes.view_animal', animal_id=animal.id) }}">
+                {% if animal.photos.first() %}
+                <img src="{{ url_for('static', filename='uploads/' + animal.photos.first().filename) }}" class="card-img-top" alt="{{ animal.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/400x250.png?text=Нет+фото" class="card-img-top" alt="Нет фото">
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <h5 class="card-title">{{ animal.name }}</h5>
+                <p class="card-text mb-1"><strong>Порода:</strong> {{ animal.breed }}</p>
+                <p class="card-text mb-1"><strong>Возраст:</strong> {{ animal.age_in_months }} мес.</p>
+                <p class="card-text mb-1"><strong>Пол:</strong> {{ 'Мальчик' if animal.gender == 'male' else 'Девочка' }}</p>
+                <p class="card-text mb-1"><strong>Заявок:</strong> {{ animal.adoptions.count() }}</p>
+                <p class="card-text"><strong>Статус:</strong> <span class="badge 
+                        {% if animal.status == 'available' %}bg-success{% endif %}
+                        {% if animal.status == 'adoption' %}bg-warning text-dark{% endif %}
+                        {% if animal.status == 'adopted' %}bg-secondary{% endif %}
+                    ">{{ animal.status|replace('_', ' ')|capitalize }}</span></p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+                <div class="d-flex justify-content-start align-items-center">
+                    <a href="{{ url_for('routes.view_animal', animal_id=animal.id) }}" class="btn btn-sm btn-outline-primary me-2">Просмотр</a>
+                    {% if current_user.is_authenticated and (current_user.is_admin or current_user.is_moderator) %}
+                    <a href="{{ url_for('routes.edit_animal', animal_id=animal.id) }}" class="btn btn-sm btn-outline-secondary me-2">Редактировать</a>
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteAnimalModal" data-animal-id="{{ animal.id }}" data-animal-name="{{ animal.name }}">
+                        Удалить
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p class="text-center">Пока нет животных в приюте.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Пагинация -->
+{% if animals.pages > 1 %}
+<nav class="mt-4" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if not animals.has_prev %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('routes.index', page=animals.prev_num) }}">«</a>
+        </li>
+        {% for page_num in animals.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+                <li class="page-item {% if page_num == animals.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('routes.index', page=page_num) }}">{{ page_num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endfor %}
+        <li class="page-item {% if not animals.has_next %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('routes.index', page=animals.next_num) }}">»</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+{% if current_user.is_authenticated and current_user.is_admin %}
+<div class="mt-4 text-center">
+    <a href="{{ url_for('routes.add_animal') }}" class="btn btn-success">Добавить животное</a>
+</div>
+{% endif %}
+
+<!-- Модальное окно для подтверждения удаления -->
+<div class="modal fade" id="deleteAnimalModal" tabindex="-1" aria-labelledby="deleteAnimalModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAnimalModalLabel">Удаление животного</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Текст будет вставлен с помощью JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Да</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
